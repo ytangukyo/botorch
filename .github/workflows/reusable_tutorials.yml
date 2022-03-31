@@ -18,19 +18,19 @@ on:
   workflow_dispatch:
     inputs:
       smoke_test:
+        description: Use smoke test
         required: false
         type: boolean
-        description: Use smoke test
         default: true
       use_stable_pytorch_gpytorch:
+        description: Use min required pytorch & gpytorch
         required: false
         type: boolean
-        description: Use min required pytorch & gpytorch
         default: false
       use_stable_ax:
+        description: Use stable Ax
         required: false
         type: boolean
-        description: Use stable Ax
         default: false
 
 jobs:
@@ -46,7 +46,6 @@ jobs:
     - name: Fetch all history for all tags and branches
       # We need to do this so setuptools_scm knows how to set the BoTorch version.
       run: git fetch --prune --unshallow
-    - name: Install dependencies
     - if: ${{ !inputs.use_stable_pytorch_botorch }}
       name: Install latest PyTorch & GPyTorch
       run: |
