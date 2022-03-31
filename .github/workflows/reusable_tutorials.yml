@@ -15,23 +15,6 @@ on:
         required: false
         type: boolean
         default: false
-  workflow_dispatch:
-    inputs:
-      smoke_test:
-        description: Use smoke test
-        required: false
-        type: boolean
-        default: true
-      use_stable_pytorch_gpytorch:
-        description: Use min required pytorch & gpytorch
-        required: false
-        type: boolean
-        default: false
-      use_stable_ax:
-        description: Use stable Ax
-        required: false
-        type: boolean
-        default: false
 
 jobs:
   tutorials:
