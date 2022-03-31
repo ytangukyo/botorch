@@ -6,7 +6,20 @@ on:
   pull_request:
     branches: [ main ]
   workflow_dispatch:
-
+  workflow_call:
+    inputs:
+      smoke_test:
+        required: false
+        type: boolean
+        default: true
+      use_stable_pytorch_gpytorch:
+        required: false
+        type: boolean
+        default: false
+      use_stable_ax:
+        required: false
+        type: boolean
+        default: false
 
 jobs:
 
@@ -26,10 +39,26 @@ jobs:
       env:
         # this is so Ax's setup doesn't install a pinned BoTorch version
         ALLOW_BOTORCH_LATEST: true
+      if: ${{ !inputs.use_stable_pytorch_botorch }}
       run: |
         pip install git+https://github.com/cornellius-gp/gpytorch.git
         pip install git+https://github.com/facebook/Ax.git
+      if: ${{ inputs.use_stable_pytorch_botorch }}
+      run: |
+        python setup.py egg_info
+        req_txt="botorch.egg-info/requires.txt"
+        min_torch_version=$(grep '\btorch>=' ${req_txt} | sed 's/[^0-9.]//g')
+        min_gpytorch_version=$(grep '\bgpytorch>=' ${req_txt} | sed 's/[^0-9.]//g')
+        pip install "torch==${min_torch_version}" "gpytorch==${min_gpytorch_version}"
+      if: ${{ !inputs.use_stable_ax }}
+      run: |
+        pip install git+https://github.com/facebook/Ax.git    
+      run: |
         pip install .[tutorials]
     - name: Run tutorials
+      if: ${{ inputs.smoke_test }}
       run: |
         python scripts/run_tutorials.py -p "$(pwd)" -s
+      if: ${{ !inputs.smoke_test }}
+      run: |
+        python scripts/run_tutorials.py -p "$(pwd)"
