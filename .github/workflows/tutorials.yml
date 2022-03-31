@@ -11,7 +11,7 @@ on:
 jobs:
   call-workflow:
     name: Run tutorials with smoke test on latest PyTorch / GPyTorch / Ax
-    uses: ./.github/workflows/reusable_tutorials.yml@main
+    uses: ./.github/workflows/reusable_tutorials.yml
     with:
       smoke_test: true
       use_stable_pytorch_gpytorch: false
